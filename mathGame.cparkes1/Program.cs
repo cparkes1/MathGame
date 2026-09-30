@@ -1,9 +1,11 @@
 ﻿using System.Data;
 using System.Numerics;
 using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 
 Random random = new Random();
-List<String> scoreList = new List<String>();
+List<GameResult> scoreHistory = new();
 
 string userSelection = "";
 
@@ -32,15 +34,20 @@ while (true)
     else if (userSelection.ToLower() == "scores")
     {
         Console.Clear();
-        if (scoreList.Count == 0)
+        if (scoreHistory.Count == 0)
         {
             Console.WriteLine("No scores yet.");
             Console.WriteLine("Press enter to return to main menu");
             Console.ReadLine();
         }
 
+        List<GameResult> sortedLeaderboard = scoreHistory
+            .OrderByDescending(r => r.Score)
+            .ThenBy(r => r.Time)
+            .ToList();
+
         Console.WriteLine("Previous Scores:");
-        foreach (var s in scoreList)
+        foreach (var s in sortedLeaderboard)
             Console.WriteLine(s);
         Console.WriteLine("Press enter to return to main menu");
         Console.ReadLine();
@@ -102,7 +109,8 @@ while (true)
     TimeSpan elapsedTime = Stopwatch.GetElapsedTime(startTime);
     string formattedElapsedTime = elapsedTime.ToString(@"mm\:ss\.fff");
     Console.WriteLine($"Congrats you got {score} points in {formattedElapsedTime}");
-    scoreList.Add($"{score}         {formattedElapsedTime}");
+    scoreHistory.Add(new GameResult(score, elapsedTime));
     Console.WriteLine("Press enter to return to main menu");
     Console.ReadLine();
 }
+
