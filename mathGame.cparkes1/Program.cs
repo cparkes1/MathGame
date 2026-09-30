@@ -1,14 +1,15 @@
 ﻿using System.Data;
 using System.Numerics;
+using System.Diagnostics;
 
 Random random = new Random();
-List<int> scoreList = new List<int>();
+List<String> scoreList = new List<String>();
 
 string userSelection = "";
 
 while (true)
 {
-    int scoreTracker = 0;
+    int score = 0;
     int turnCounter = 0;
 
     Console.Clear();
@@ -54,6 +55,7 @@ while (true)
     }
 
     Console.Clear();
+    long startTime = Stopwatch.GetTimestamp();
     do
     {
         int firstNumber = random.Next(101);
@@ -87,7 +89,7 @@ while (true)
         if (userSolution == expectedSolution)
         {
             Console.WriteLine("\n Correct\n");
-            scoreTracker++;
+            score++;
         }
         else
         {
@@ -96,8 +98,11 @@ while (true)
 
         turnCounter++;
     } while (turnCounter < 5);
-    Console.WriteLine($"Congrats you got {scoreTracker} points");
-    scoreList.Add(scoreTracker);
+
+    TimeSpan elapsedTime = Stopwatch.GetElapsedTime(startTime);
+    string formattedElapsedTime = elapsedTime.ToString(@"mm\:ss\.fff");
+    Console.WriteLine($"Congrats you got {score} points in {formattedElapsedTime}");
+    scoreList.Add($"{score}         {formattedElapsedTime}");
     Console.WriteLine("Press enter to return to main menu");
     Console.ReadLine();
 }
